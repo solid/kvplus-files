@@ -4,17 +4,20 @@ const fs = require('fs-extra')
 
 class KVPlusRdfStore {
   constructor (options = {}) {
-    this.path = options.path
+    this.path = options.path || './db'
+    this.filePrefix = options.filePrefix || '_key_'
+    this.fileExt = options.fileExt || 'ttl'
   }
 
   /**
-   * @method collectionPath
+   * @method absolutePathFor
    * @private
    * @param {string} collectionName
+   * @param {string} key
    * @return {string}
    */
-  collectionPath (collectionName) {
-    return path.join(this.path, '/', collectionName)
+  absolutePathFor (collectionName, key) {
+    return path.resolve(this.relativePathFor(collectionName, key))
   }
 
   /**
@@ -28,9 +31,55 @@ class KVPlusRdfStore {
     if (!collectionName) {
       return Promise.reject(new TypeError('Cannot create empty collection name'))
     }
-    let collectionPath = this.collectionPath(collectionName)
+    let collectionPath = this.relativePathFor(collectionName)
     return new Promise((resolve, reject) => {
       fs.mkdirp(collectionPath, (err) => {
+        if (err) {
+          return reject(err)
+        } else {
+          return resolve(true)
+        }
+      })
+    })
+  }
+
+  /**
+   * @private
+   * @param key {string}
+   * @return {string}
+   */
+  fileNameFor (key) {
+    return `${this.filePrefix}${key}.${this.fileExt}`
+  }
+
+  /**
+   * @private
+   * @param collectionName {string}
+   * @param key {string}
+   * @throws {TypeError}
+   * @return {string}
+   */
+  relativePathFor (collectionName, key) {
+    if (!collectionName) {
+      throw new TypeError('Cannot resolve path for an empty collection name')
+    }
+    let relPath = path.join(this.path, collectionName)
+    if (key) {
+      relPath = path.join(relPath, this.fileNameFor(key))
+    }
+    return relPath
+  }
+
+  put (collectionName, key, data) {
+    if (!collectionName) {
+      return Promise.reject(new TypeError('Cannot put() using an empty collection name'))
+    }
+    if (!key) {
+      return Promise.reject(new TypeError('Cannot put() using an empty key'))
+    }
+    let filePath = this.relativePathFor(collectionName, key)
+    return new Promise((resolve, reject) => {
+      fs.writeFile(filePath, data, (err) => {
         if (err) {
           return reject(err)
         } else {
