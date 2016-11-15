@@ -1,0 +1,55 @@
+{
+  "name": "kvplus-rdflib",
+  "version": "0.0.0",
+  "engines": {
+    "node": "^6.0"
+  },
+  "description": "Simple K/V store backend interface to RDF (Turtle) files, uses KVPlus API",
+  "main": "./lib/index",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "babel src -d lib",
+    "prepublish": "npm test && npm run build",
+    "standard": "standard *.js src/*.js",
+    "tape": "tape test/*.js",
+    "test": "npm run standard && npm run tape"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solid/kvplus-rdflib"
+  },
+  "keywords": [
+    "store",
+    "persistence",
+    "kv",
+    "solid",
+    "decentralized",
+    "key",
+    "rdf",
+    "ldp",
+    "linked",
+    "data",
+    "store",
+    "value"
+  ],
+  "author": "Dmitri Zagidulin <dzagidulin@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/solid/kvplus-rdflib/issues"
+  },
+  "homepage": "https://github.com/solid/kvplus-rdflib",
+  "dependencies": {
+    "rdflib": "^0.12.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0",
+    "standard": "^5.4.1",
+    "tape": "^4.6.2"
+  },
+  "standard": {
+    "globals": []
+  }
+}
