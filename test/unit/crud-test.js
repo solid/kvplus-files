@@ -4,7 +4,7 @@ const test = require('tape')
 const path = require('path')
 
 const KVPlusRdfStore = require('../../src/index')
-const storeBasePath = path.resolve('../store/')
+const storeBasePath = './test/store/'
 const store = new KVPlusRdfStore({ path: storeBasePath })
 
 function fileExistsFor (collectionName, key) {

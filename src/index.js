@@ -31,7 +31,8 @@ class KVPlusRdfStore {
     if (!collectionName) {
       return Promise.reject(new TypeError('Cannot create empty collection name'))
     }
-    let collectionPath = this.relativePathFor(collectionName)
+    let collectionPath = this.absolutePathFor(collectionName)
+    console.log('in createCollection():', collectionPath)
     return new Promise((resolve, reject) => {
       fs.mkdirp(collectionPath, (err) => {
         if (err) {

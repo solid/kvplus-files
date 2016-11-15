@@ -5,7 +5,7 @@ const path = require('path')
 const fs = require('fs-extra')
 
 const KVPlusRdfStore = require('../../src/index')
-const storeBasePath = path.resolve('../store/')
+const storeBasePath = './test/store/'
 
 function pathForCollection (collectionName) {
   return path.join(storeBasePath, '/', collectionName)
