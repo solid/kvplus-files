@@ -13,7 +13,7 @@
     "build": "babel src -d lib",
     "prepublish": "npm test && npm run build",
     "standard": "standard *.js src/*.js",
-    "tape": "tape test/*.js",
+    "tape": "tape test/unit/*.js",
     "test": "npm run standard && npm run tape"
   },
   "repository": {
