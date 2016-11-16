@@ -43,7 +43,21 @@ class KVPlusRdfStore {
     })
   }
 
+  /**
+   * @method exists
+   * @param {string} collectionName
+   * @param {string} key
+   * @throws {TypeError} If collection name or key is a falsy value.
+   * @throws {Error} fs error
+   * @return {Promise<Boolean>}
+   */
   exists (collectionName, key) {
+    if (!collectionName) {
+      return Promise.reject(new TypeError('Cannot call exists() using an empty collection name'))
+    }
+    if (!key) {
+      return Promise.reject(new TypeError('Cannot call exists() using an empty key'))
+    }
     let filePath = this.relativePathFor(collectionName, key)
     return new Promise((resolve, reject) => {
       fs.access(filePath, fs.R_OK | fs.W_OK, (err) => {
@@ -68,6 +82,29 @@ class KVPlusRdfStore {
   }
 
   /**
+   * @method get
+   * @param {string} collectionName
+   * @param {string} key
+   * @throws {TypeError} If collection name or key is a falsy value.
+   * @throws {Error} fs error
+   * @return {Promise<Object>}
+   */
+  get (collectionName, key) {
+    let filePath = this.relativePathFor(collectionName, key)
+    return new Promise((resolve, reject) => {
+      fs.readFile(filePath, (err, result) => {
+        if (!err) {
+          return resolve(result)
+        }
+        if (err.code === 'ENOENT') {
+          return resolve(null)
+        }
+        return reject(err)
+      })
+    })
+  }
+
+  /**
    * @private
    * @param collectionName {string}
    * @param key {string}
@@ -85,6 +122,15 @@ class KVPlusRdfStore {
     return relPath
   }
 
+  /**
+   * @method put
+   * @param {string} collectionName
+   * @param {string} key
+   * @param {Object} data
+   * @throws {TypeError} If collection name or key is a falsy value.
+   * @throws {Error} fs error
+   * @return {Promise}
+   */
   put (collectionName, key, data) {
     if (!collectionName) {
       return Promise.reject(new TypeError('Cannot put() using an empty collection name'))

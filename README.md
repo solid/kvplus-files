@@ -16,6 +16,6 @@ Simple filesystem based K/V backend, conforms to the
 * [x] `createCollection()`
 * CRUD
   - [x] `put()`
-  - [ ] `get()`
+  - [x] `get()`
   - [x] `exists()`
   - [ ] `del()`
