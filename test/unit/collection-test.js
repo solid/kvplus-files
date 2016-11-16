@@ -5,11 +5,11 @@ const path = require('path')
 const fs = require('fs-extra')
 const util = require('./test-utils')
 
-const KVPlusRdfStore = require('../../src/index')
+const KVPFileStore = require('../../src/index')
 const storeBasePath = './test/store/'
 
 test('Create collection test', t => {
-  let store = new KVPlusRdfStore({ path: storeBasePath })
+  let store = new KVPFileStore({ path: storeBasePath })
   let collectionName = 'users1'
   store.createCollection(collectionName)
     .then(() => {

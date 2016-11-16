@@ -4,15 +4,16 @@ const test = require('tape')
 const path = require('path')
 const util = require('./test-utils')
 
-const KVPlusRdfStore = require('../../src/index')
+const KVPFileStore = require('../../src/index')
 const storeBasePath = './test/store/'
-const store = new KVPlusRdfStore({ path: storeBasePath })
+const store = new KVPFileStore({ path: storeBasePath })
 
 test('setup - init collections', t => {
   return Promise.all([
     store.createCollection('users2'),
     store.createCollection('users3'),
-    store.createCollection('users4')
+    store.createCollection('users4'),
+    store.createCollection('users5')
   ])
     .then(() => {
       t.end()
@@ -100,6 +101,43 @@ test('get() test', t => {
     })
     .then((exists) => {
       t.notOk(exists, 'Cleanup for get() test')
+      t.end()
+    })
+    .catch(err => {
+      console.log(err)
+      t.fail(err)
+    })
+})
+
+test('del() test', t => {
+  let collectionName = 'users5'
+  let key = 'userA'
+  let value = JSON.stringify({ name: 'Alice' })
+  return util.fileExistsFor(collectionName, key)
+    .then(exists => {
+      t.notOk(exists, 'users5/userA should not exist initially')
+      return store.del(collectionName, key)
+    })
+    .then(result => {
+      t.notOk(result, 'a del() to a non-existing key should return false')
+      return store.put(collectionName, key, value)
+    })
+    .then(() => {
+      return util.fileExistsFor(collectionName, key)
+    })
+    .then(exists => {
+      t.ok(exists, 'key should now exist for del() test')
+      return store.del(collectionName, key)
+    })
+    .then(result => {
+      t.ok(result, 'a del() to an existing key should return true')
+      return util.fileExistsFor(collectionName, key)
+    })
+    .then(exists => {
+      t.notOk(exists, 'the key should not exist after being deleted')
+      return util.removeCollectionDir(collectionName)
+    })
+    .then(() => {
       t.end()
     })
     .catch(err => {
