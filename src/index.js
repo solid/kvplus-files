@@ -6,7 +6,7 @@ class KVPlusRdfStore {
   constructor (options = {}) {
     this.path = options.path || './db'
     this.filePrefix = options.filePrefix || '_key_'
-    this.fileExt = options.fileExt || 'ttl'
+    this.fileExt = options.fileExt || 'json'
   }
 
   /**
@@ -32,7 +32,6 @@ class KVPlusRdfStore {
       return Promise.reject(new TypeError('Cannot create empty collection name'))
     }
     let collectionPath = this.absolutePathFor(collectionName)
-    console.log('in createCollection():', collectionPath)
     return new Promise((resolve, reject) => {
       fs.mkdirp(collectionPath, (err) => {
         if (err) {
