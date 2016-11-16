@@ -17,5 +17,5 @@ Simple filesystem based K/V backend, conforms to the
 * CRUD
   - [x] `put()`
   - [ ] `get()`
-  - [ ] `exists()`
+  - [x] `exists()`
   - [ ] `del()`

@@ -43,6 +43,21 @@ class KVPlusRdfStore {
     })
   }
 
+  exists (collectionName, key) {
+    let filePath = this.relativePathFor(collectionName, key)
+    return new Promise((resolve, reject) => {
+      fs.access(filePath, fs.R_OK | fs.W_OK, (err) => {
+        if (!err) {
+          return resolve(true)
+        }
+        if (err.code === 'ENOENT') {
+          return resolve(false)
+        }
+        return reject(err)
+      })
+    })
+  }
+
   /**
    * @private
    * @param key {string}
@@ -80,8 +95,11 @@ class KVPlusRdfStore {
     let filePath = this.relativePathFor(collectionName, key)
     return new Promise((resolve, reject) => {
       fs.writeFile(filePath, data, (err) => {
-        if (err) {
-          return reject(err)
+        if (!err) {
+          return resolve(true)
+        }
+        if (err.code === 'ENOENT') {
+          return reject(new Error('Error in put() - collection does not exist'))
         } else {
           return resolve(true)
         }

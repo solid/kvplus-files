@@ -58,11 +58,13 @@ function removeFileFor (collectionName, key) {
 function removePath (relPath) {
   return new Promise((resolve, reject) => {
     fs.remove(relPath, (err) => {
-      if (err) {
-        return reject(err)
-      } else {
+      if (!err) {
         return resolve(true)
       }
+      if (err.code === 'ENOENT') {
+        return resolve(false)
+      }
+      return reject(err)
     })
   })
 }
