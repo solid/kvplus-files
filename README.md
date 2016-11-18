@@ -19,3 +19,6 @@ Simple filesystem based K/V backend, conforms to the
   - [x] `get()`
   - [x] `exists()`
   - [x] `del()`
+* Secondary Indexes
+  - [ ] `createIndex()`
+  - [ ] `findBy()`

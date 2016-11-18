@@ -13,7 +13,8 @@ test('setup - init collections', t => {
     store.createCollection('users2'),
     store.createCollection('users3'),
     store.createCollection('users4'),
-    store.createCollection('users5')
+    store.createCollection('users5'),
+    store.createCollection('users6')
   ])
     .then(() => {
       t.end()
@@ -30,13 +31,6 @@ test('put() test', t => {
     })
     .then(exists => {
       t.ok(exists, 'put() should result in a file being created')
-      return util.removeCollectionDir(collectionName)
-    })
-    .then(() => {
-      return util.fileExistsFor(collectionName, key)
-    })
-    .then((exists) => {
-      t.notOk(exists)
       t.end()
     })
     .catch(err => {
@@ -59,13 +53,6 @@ test('exists() test', t => {
     })
     .then(exists => {
       t.ok(exists, 'users3/userA should exist after a put')
-      return util.removeCollectionDir(collectionName)
-    })
-    .then(() => {
-      return util.fileExistsFor(collectionName, key)
-    })
-    .then((exists) => {
-      t.notOk(exists)
       t.end()
     })
     .catch(err => {
@@ -94,13 +81,6 @@ test('get() test', t => {
       t.ok(result, 'a get() of an existing key should return a value')
       let parsed = JSON.parse(result)
       t.equal(parsed.name, 'Alice')
-      return util.removeCollectionDir(collectionName)
-    })
-    .then(() => {
-      return util.fileExistsFor(collectionName, key)
-    })
-    .then((exists) => {
-      t.notOk(exists, 'Cleanup for get() test')
       t.end()
     })
     .catch(err => {
@@ -135,13 +115,23 @@ test('del() test', t => {
     })
     .then(exists => {
       t.notOk(exists, 'the key should not exist after being deleted')
-      return util.removeCollectionDir(collectionName)
-    })
-    .then(() => {
       t.end()
     })
     .catch(err => {
       console.log(err)
       t.fail(err)
+    })
+})
+
+test('cleanup - remove collections', t => {
+  return Promise.all([
+    util.removeCollectionDir('users2'),
+    util.removeCollectionDir('users3'),
+    util.removeCollectionDir('users4'),
+    util.removeCollectionDir('users5'),
+    util.removeCollectionDir('users6')
+  ])
+    .then(() => {
+      t.end()
     })
 })
