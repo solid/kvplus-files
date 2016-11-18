@@ -7,6 +7,16 @@ class KVPFileStore {
     this.path = options.path || './db'
     this.filePrefix = options.filePrefix || '_key_'
     this.fileExt = options.fileExt || 'json'
+    this.serialize = (data) => {
+      return typeof data === 'string' ? data : JSON.stringify(data)
+    }
+    this.deserialize = (data) => {
+      try {
+        data = JSON.parse(data)
+      } catch (err) {
+      }
+      return data
+    }
   }
 
   /**
