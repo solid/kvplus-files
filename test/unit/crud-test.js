@@ -24,7 +24,7 @@ test('setup - init collections', t => {
 test('put() test', t => {
   let collectionName = 'users2'
   let key = 'userA'
-  let value = JSON.stringify({ name: 'Alice' })
+  let value = { name: 'Alice' }
   store.put(collectionName, key, value)
     .then(() => {
       return util.fileExistsFor(collectionName, key)
@@ -42,7 +42,7 @@ test('put() test', t => {
 test('exists() test', t => {
   let collectionName = 'users3'
   let key = 'userA'
-  let value = JSON.stringify({ name: 'Alice' })
+  let value = { name: 'Alice' }
   store.exists(collectionName, key)
     .then(exists => {
       t.notOk(exists, 'users3/userA should not exist initially')
@@ -64,7 +64,7 @@ test('exists() test', t => {
 test('get() test', t => {
   let collectionName = 'users4'
   let key = 'userA'
-  let value = JSON.stringify({ name: 'Alice' })
+  let value = { name: 'Alice' }
   return util.fileExistsFor(collectionName, key)
     .then(exists => {
       t.notOk(exists, 'users4/userA should not exist initially')
@@ -79,8 +79,7 @@ test('get() test', t => {
     })
     .then(result => {
       t.ok(result, 'a get() of an existing key should return a value')
-      let parsed = JSON.parse(result)
-      t.equal(parsed.name, 'Alice')
+      t.equal(result.name, 'Alice')
       t.end()
     })
     .catch(err => {
@@ -92,7 +91,7 @@ test('get() test', t => {
 test('del() test', t => {
   let collectionName = 'users5'
   let key = 'userA'
-  let value = JSON.stringify({ name: 'Alice' })
+  let value = { name: 'Alice' }
   return util.fileExistsFor(collectionName, key)
     .then(exists => {
       t.notOk(exists, 'users5/userA should not exist initially')

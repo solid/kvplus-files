@@ -133,6 +133,9 @@ class KVPFileStore {
     return new Promise((resolve, reject) => {
       fs.readFile(filePath, (err, result) => {
         if (!err) {
+          if (this.deserialize) {
+            result = this.deserialize(result)
+          }
           return resolve(result)
         }
         if (err.code === 'ENOENT') {
@@ -178,6 +181,9 @@ class KVPFileStore {
       return Promise.reject(new TypeError('Cannot put() using an empty key'))
     }
     let filePath = this.relativePathFor(collectionName, key)
+    if (this.serialize) {
+      data = this.serialize(data)
+    }
     return new Promise((resolve, reject) => {
       fs.writeFile(filePath, data, (err) => {
         if (!err) {
