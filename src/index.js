@@ -190,7 +190,7 @@ class KVPFileStore {
           return resolve(true)
         }
         if (err.code === 'ENOENT') {
-          return reject(new Error('Error in put() - collection does not exist'))
+          return reject(new Error(`Error in put() - collection ${JSON.stringify(collectionName)} does not exist`))
         } else {
           return resolve(true)
         }
