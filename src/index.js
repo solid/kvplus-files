@@ -5,6 +5,7 @@ const fs = require('fs-extra')
 class KVPFileStore {
   constructor (options = {}) {
     this.path = options.path || './db'
+    this.collections = options.collections || []
     this.filePrefix = options.filePrefix || '_key_'
     this.fileExt = options.fileExt || 'json'
     this.serialize = (data) => {
@@ -54,6 +55,18 @@ class KVPFileStore {
   }
 
   /**
+   * @private
+   * @param collectionName
+   */
+  createCollectionSync (collectionName) {
+    if (!collectionName) {
+      throw new TypeError('Cannot create empty collection name')
+    }
+    let collectionPath = this.absolutePathFor(collectionName)
+    fs.mkdirpSync(collectionPath)
+  }
+
+  /**
    * @method del
    * @param {string} collectionName
    * @param {string} key
@@ -68,7 +81,7 @@ class KVPFileStore {
     if (!key) {
       return Promise.reject(new TypeError('Cannot call del() using an empty key'))
     }
-    let filePath = this.relativePathFor(collectionName, key)
+    let filePath = this.absolutePathFor(collectionName, key)
     return new Promise((resolve, reject) => {
       fs.unlink(filePath, (err) => {
         if (!err) {
@@ -97,7 +110,7 @@ class KVPFileStore {
     if (!key) {
       return Promise.reject(new TypeError('Cannot call exists() using an empty key'))
     }
-    let filePath = this.relativePathFor(collectionName, key)
+    let filePath = this.absolutePathFor(collectionName, key)
     return new Promise((resolve, reject) => {
       fs.access(filePath, fs.R_OK | fs.W_OK, (err) => {
         if (!err) {
@@ -129,7 +142,7 @@ class KVPFileStore {
    * @return {Promise<Object>}
    */
   get (collectionName, key) {
-    let filePath = this.relativePathFor(collectionName, key)
+    let filePath = this.absolutePathFor(collectionName, key)
     return new Promise((resolve, reject) => {
       fs.readFile(filePath, (err, result) => {
         if (!err) {
@@ -144,6 +157,12 @@ class KVPFileStore {
         return reject(err)
       })
     })
+  }
+
+  initCollections () {
+    for (let collectionName of this.collections) {
+      this.createCollectionSync(collectionName)
+    }
   }
 
   /**
@@ -180,7 +199,7 @@ class KVPFileStore {
     if (!key) {
       return Promise.reject(new TypeError('Cannot put() using an empty key'))
     }
-    let filePath = this.relativePathFor(collectionName, key)
+    let filePath = this.absolutePathFor(collectionName, key)
     if (this.serialize) {
       data = this.serialize(data)
     }
