@@ -29,7 +29,7 @@ test('New store default serialize test', t => {
 
 test('New store default deserialize test', t => {
   let store = new KVPFileStore()
-  t.equal(store.deserialize('test string'), 'test string')
+  t.equal(store.deserialize('"test string"'), 'test string')
   t.deepEqual(store.deserialize('{"name":"Alice"}'), { name: 'Alice' })
   t.end()
 })
