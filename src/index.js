@@ -3,18 +3,31 @@ const path = require('path')
 const fs = require('fs-extra')
 
 class KVPFileStore {
+  /**
+   * @constructor
+   *
+   * @param [options={}] {Object}
+   * @param [options.path] {string}
+   * @param [options.collections] {Array<string>}
+   * @param [options.filePrefix] {string}
+   * @param [options.fileExt] {string}
+   */
   constructor (options = {}) {
     this.path = options.path || './db'
     this.collections = options.collections || []
     this.filePrefix = options.filePrefix || '_key_'
     this.fileExt = options.fileExt || 'json'
+
+    // Set up default serialize/deserialize hooks
+    // These can be overridden by the client after instantiation
     this.serialize = (data) => {
       return typeof data === 'string' ? data : JSON.stringify(data)
     }
     this.deserialize = (data) => {
       try {
         data = JSON.parse(data)
-      } catch (err) {
+      } catch (error) {
+        console.error('Error deserializing object: ', error)
       }
       return data
     }
