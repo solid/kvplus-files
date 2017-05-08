@@ -21,7 +21,7 @@ Simple filesystem based K/V backend, conforms to the
   - [x] `put()`
   - [x] `get()`
   - [x] `exists()`
-  - [x] `del()`
+  - [x] `remove()`
 * Secondary Indexes
   - [ ] `createIndex()`
   - [ ] `findBy()`

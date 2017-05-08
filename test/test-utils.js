@@ -41,7 +41,7 @@ function pathExists (relPath) {
         return resolve(false)
       }
       return reject(err)
-    });
+    })
   })
 }
 

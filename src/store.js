@@ -2,6 +2,10 @@
 const path = require('path')
 const fs = require('fs-extra')
 
+const DEFAULT_PATH = './db'
+const DEFAULT_FILE_PREFIX = '_key_'
+const DEFAULT_FILE_EXT = 'json'
+
 class KVPFileStore {
   /**
    * @constructor
@@ -13,16 +17,17 @@ class KVPFileStore {
    * @param [options.fileExt] {string}
    */
   constructor (options = {}) {
-    this.path = options.path || './db'
+    this.path = options.path || DEFAULT_PATH
     this.collections = options.collections || []
-    this.filePrefix = options.filePrefix || '_key_'
-    this.fileExt = options.fileExt || 'json'
+    this.filePrefix = options.filePrefix || DEFAULT_FILE_PREFIX
+    this.fileExt = options.fileExt || DEFAULT_FILE_EXT
 
     // Set up default serialize/deserialize hooks
     // These can be overridden by the client after instantiation
     this.serialize = (data) => {
-      return typeof data === 'string' ? data : JSON.stringify(data)
+      return JSON.stringify(data)
     }
+
     this.deserialize = (data) => {
       try {
         data = JSON.parse(data)
@@ -80,14 +85,14 @@ class KVPFileStore {
   }
 
   /**
-   * @method del
+   * @method remove
    * @param {string} collectionName
    * @param {string} key
    * @throws {TypeError} If collection name or key is a falsy value.
    * @throws {Error} fs error
    * @return {Promise<Boolean>}
    */
-  del (collectionName, key) {
+  remove (collectionName, key) {
     if (!collectionName) {
       return Promise.reject(new TypeError('Cannot call del() using an empty collection name'))
     }
@@ -106,6 +111,10 @@ class KVPFileStore {
         return reject(err)
       })
     })
+  }
+
+  del (collectionName, key) {
+    return this.remove(collectionName, key)
   }
 
   /**
@@ -230,5 +239,9 @@ class KVPFileStore {
     })
   }
 }
+
+KVPFileStore.DEFAULT_PATH = DEFAULT_PATH
+KVPFileStore.DEFAULT_FILE_PREFIX = DEFAULT_FILE_PREFIX
+KVPFileStore.DEFAULT_FILE_EXT = DEFAULT_FILE_EXT
 
 module.exports = KVPFileStore

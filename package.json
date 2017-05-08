@@ -5,16 +5,16 @@
     "node": "^6.0"
   },
   "description": "Simple K/V store backend interface to RDF (Turtle) files, uses KVPlus API",
-  "main": "./lib/index",
+  "main": "./lib/store",
   "files": [
     "lib"
   ],
   "scripts": {
     "build": "babel src -d lib",
     "prepublish": "npm test && npm run build",
-    "standard": "standard *.js src/*.js",
-    "tape": "tape test/unit/*.js",
-    "test": "npm run standard && npm run tape"
+    "standard": "standard",
+    "mocha": "nyc mocha ./test/**/*.js",
+    "test": "npm run standard && npm run mocha"
   },
   "repository": {
     "type": "git",
@@ -44,12 +44,31 @@
     "fs-extra": "^2.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.14.0",
-    "babel-preset-es2015": "^6.14.0",
-    "standard": "^8.6.0",
-    "tape": "^4.6.3"
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^3.5.0",
+    "dirty-chai": "^1.2.2",
+    "mocha": "^3.3.0",
+    "nyc": "^10.3.2",
+    "sinon": "^2.2.0",
+    "sinon-chai": "^2.10.0",
+    "standard": "^10.0.2"
+  },
+  "nyc": {
+    "reporter": [
+      "html",
+      "text-summary"
+    ],
+    "cache": true
   },
   "standard": {
-    "globals": []
+    "globals": [
+      "after",
+      "afterEach",
+      "before",
+      "beforeEach",
+      "describe",
+      "it"
+    ]
   }
 }
