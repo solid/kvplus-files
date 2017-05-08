@@ -29,4 +29,23 @@ describe('Store API', () => {
         })
     })
   })
+
+  describe('createCollectionSync()', () => {
+    it('should create a collection dir', () => {
+      let store = new KVPFileStore({ path: storeBasePath })
+      let collectionName = 'users2'
+
+      store.createCollectionSync(collectionName)
+
+      return util.collectionDirExists(collectionName)
+        .then(exists => {
+          // Collection dir should exist after createCollection()
+          expect(exists).to.be.true()
+
+          if (exists) {
+            return util.removeCollectionDir(collectionName)
+          }
+        })
+    })
+  })
 })

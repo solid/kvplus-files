@@ -41,7 +41,8 @@
   },
   "homepage": "https://github.com/solid/kvplus-files",
   "dependencies": {
-    "fs-extra": "^2.0.0"
+    "fs-extra": "^2.0.0",
+    "fs-extra-p": "^4.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
